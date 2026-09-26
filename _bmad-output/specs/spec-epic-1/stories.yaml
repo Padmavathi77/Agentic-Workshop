@@ -1,0 +1,12 @@
+- id: "1"
+  title: Triage decision schema
+  description: >-
+    Build the validator for CAP-1: four fields, allowed values, route matching
+    category, and a one-sentence rationale, with errors that name the bad field
+    (see triage-decision-fields.md).
+- id: "2"
+  title: Seed loader
+  description: >-
+    Build uv run python load_seed.py for CAP-2 and CAP-3: load both seed CSVs
+    into app.db with the table and column names mcp/triage_server.py reads, and
+    give the same database when run twice.
