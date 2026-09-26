@@ -22,14 +22,19 @@ def main() -> None:
     mlflow.langchain.autolog()
 
     try:
-        from agent import triage
+        from agent import TriageError, triage
     except ImportError:
         raise SystemExit("The agent isn't built yet. That's Epic 2: _bmad-output/specs/spec-epic-2/SPEC.md")
 
-    with mlflow.start_span(name="triage", span_type="AGENT") as span:
-        span.set_inputs({"ticket_id": ticket_id})
-        decision = asyncio.run(triage(ticket_id))
-        span.set_outputs(decision)
+    try:
+        with mlflow.start_span(name="triage", span_type="AGENT") as span:
+            span.set_inputs({"ticket_id": ticket_id})
+            decision = asyncio.run(triage(ticket_id))
+            span.set_outputs(decision)
+    except TriageError as exc:
+        raise SystemExit(f"Triage failed: {exc}") from None
+    except Exception as exc:
+        raise SystemExit(f"Triage failed: {type(exc).__name__}: {exc}") from None
     print(json.dumps(decision, indent=2))
 
 
